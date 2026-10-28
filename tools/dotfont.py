@@ -12,7 +12,7 @@ GLYPHS = {
     "5": "afgcd", "6": "afgedc", "7": "abc", "8": "abcdefg", "9": "abcdfg",
     "-": "g",
     # буквы для дней недели: Sun Mon Tue Wed Thu Fri Sat
-    "S": "afgcd", "M": "afbekl|w", "T": "akl", "W": "fedcl|w", "F": "afge",
+    "S": "afgcd", "M": "afbekl|w", "T": "Akl", "W": "fedcl|w", "F": "afge",
     "u": "ecd", "n": "gec", "o": "gecd", "e": "abfged", "d": "bcdeg",
     "h": "fegc", "r": "ge", "i": "e|n", "a": "abgecd", "t": "fged",
 }
@@ -82,11 +82,14 @@ class DotFont:
     def _segs(self, w):
         h, t = self.h, self.t
         mid = (h - t) // 2
-        # верхние вертикали - от верха до средней перекладины, нижние - от неё до низа
-        up, low, hor = range(0, mid + t), range(mid, h), range(0, w)
+        # Вертикали включают углы, горизонтали - без крайнего столбика. Так угол закрашен,
+        # только если к перекладине примыкает вертикаль (иначе торчит "засечка").
+        up, low = range(0, mid + t), range(mid, h)
+        hor, full = range(1, w - 1), range(0, w)
         cc = (w - t) // 2
         return {
             "a": {(r, c) for r in range(t) for c in hor},
+            "A": {(r, c) for r in range(t) for c in full},  # верх на всю ширину (для T)
             "g": {(r, c) for r in range(mid, mid + t) for c in hor},
             "d": {(r, c) for r in range(h - t, h) for c in hor},
             "f": {(r, c) for r in up for c in range(t)},
