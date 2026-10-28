@@ -72,10 +72,11 @@ class DotFont:
     cell, dot - шаг сетки и размер квадратика в px; gap - колонок между символами.
     """
 
-    def __init__(self, name, w, h, t, cell, dot, gap, chars, icons=False):
+    def __init__(self, name, w, h, t, cell, dot, gap, chars, icons=False, dot_h=None):
         self.name = name
         self.w, self.h, self.t = w, h, t
         self.cell, self.dot, self.gap = cell, dot, gap
+        self.dot_h = dot_h or dot  # высота квадратика (если хочется полоски вместо точек)
         self.chars = chars
         self.icons = icons
 
@@ -140,7 +141,7 @@ class DotFont:
             _, cells = self.glyph(ch)
             for r, c in cells:
                 px, py = x + c * self.cell, y0 + r * self.cell
-                draw.rectangle([px, py, px + self.dot - 1, py + self.dot - 1], fill=color)
+                draw.rectangle([px, py, px + self.dot - 1, py + self.dot_h - 1], fill=color)
             x += self.advance_px(ch)
 
 

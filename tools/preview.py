@@ -10,14 +10,14 @@ from dotfont import BIG, SEC, SMALL
 
 ROOT = Path(__file__).resolve().parent.parent
 SCREEN = 260
-BG, FG = (255, 255, 255), (0, 0, 0)
+BG, FG = (0, 0, 0), (255, 255, 255)
 
 # те же константы, что в source/SuuntoLikeView.mc
 SEC_GAP, DATE_GAP, ROW_GAP, METRIC_GAP = 6, 26, 26, 15
 
 
 def main(time_txt="1451", sec_txt="37", date_txt="Wed 28.10", steps="8432", hr="72"):
-    img = Image.new("RGB", (SCREEN, SCREEN), (60, 60, 60))
+    img = Image.new("RGB", (SCREEN, SCREEN), (120, 120, 120))
     d = ImageDraw.Draw(img)
     d.ellipse([0, 0, SCREEN - 1, SCREEN - 1], fill=BG)
 

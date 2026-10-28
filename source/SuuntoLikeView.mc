@@ -9,9 +9,9 @@ import Toybox.WatchUi;
 
 class SuuntoLikeView extends WatchUi.WatchFace {
 
-    // Цвета: белый фон, всё остальное чёрным
-    private const BG = Graphics.COLOR_WHITE;
-    private const FG = Graphics.COLOR_BLACK;
+    // Цвета: чёрный фон, всё остальное белым
+    private const BG = Graphics.COLOR_BLACK;
+    private const FG = Graphics.COLOR_WHITE;
 
     // Промежуток между символами в шрифтах, px.
     // Должен совпадать с gap * cell в tools/dotfont.py
