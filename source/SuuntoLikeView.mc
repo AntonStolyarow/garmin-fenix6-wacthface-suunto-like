@@ -1,5 +1,3 @@
-import Toybox.Activity;
-import Toybox.ActivityMonitor;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.System;
@@ -16,17 +14,11 @@ class SuuntoLikeView extends WatchUi.WatchFace {
     // Промежуток между символами в шрифтах, px.
     // Должен совпадать с gap * cell в tools/dotfont.py
     private const GAP_PX = 6;        // время и секунды: 2 колонки по 3 px
-    private const GAP_SMALL_PX = 6;  // дата и данные: 2 колонки по 3 px
+    private const GAP_SMALL_PX = 6;  // дата: 2 колонки по 3 px
 
     // Отступы раскладки (те же, что в tools/preview.py)
     private const SEC_GAP = 6;   // между минутами и секундами
     private const DATE_GAP = 26; // между датой и временем
-    private const ROW_GAP = 26;  // между временем и строкой шаги/пульс
-    private const METRIC_GAP = 15; // между шагами и пульсом
-
-    // Иконки лежат в мелком шрифте как отдельные символы
-    private const ICON_STEPS = "@";
-    private const ICON_HEART = "&";
 
     private var _days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -66,35 +58,27 @@ class SuuntoLikeView extends WatchUi.WatchFace {
         var smallH = dc.getFontHeight(_smallFont);
         _secH = dc.getFontHeight(_secFont);
 
-        // Время + секунды центрируются как одна группа
+        // Время + секунды центрируются как одна группа по ширине,
+        // а дата + время - по высоте экрана
         var timeW = inkWidth(dc, timeStr, _bigFont);
         _secW = inkWidth(dc, secStr, _secFont);
         var groupW = timeW + SEC_GAP + _secW;
         var tx = (w - groupW) / 2;
-        var ty = h / 2 - bigH / 2;
+        var blockH = smallH + DATE_GAP + bigH;
+        var dy = (h - blockH) / 2;
+        var ty = dy + smallH + DATE_GAP;
 
         dc.setColor(FG, Graphics.COLOR_TRANSPARENT);
+
+        // Дата над временем: "Wed 28.10"
+        drawCentered(dc, w, dy, _smallFont, formatDate());
+
         dc.drawText(tx, ty, _bigFont, timeStr, Graphics.TEXT_JUSTIFY_LEFT);
 
         // Секунды выровнены по нижнему краю минут
         _secX = tx + timeW + SEC_GAP;
         _secY = ty + bigH - _secH;
         dc.drawText(_secX, _secY, _secFont, secStr, Graphics.TEXT_JUSTIFY_LEFT);
-
-        // Дата над временем: "Wed 28.10"
-        var dateStr = formatDate();
-        var dy = ty - DATE_GAP - smallH;
-        drawCentered(dc, w, dy, _smallFont, dateStr);
-
-        // Шаги и пульс в одну строку под временем, центрируются как одна группа
-        var stepsStr = ICON_STEPS + getSteps();
-        var hrStr = ICON_HEART + getHeartRate();
-        var stepsW = inkWidth(dc, stepsStr, _smallFont);
-        var rowW = stepsW + METRIC_GAP + inkWidth(dc, hrStr, _smallFont);
-        var rx = (w - rowW) / 2;
-        var ry = ty + bigH + ROW_GAP;
-        dc.drawText(rx, ry, _smallFont, stepsStr, Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(rx + stepsW + METRIC_GAP, ry, _smallFont, hrStr, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     // Вызывается раз в секунду в режиме сна: перерисовываем только секунды
@@ -149,27 +133,5 @@ class SuuntoLikeView extends WatchUi.WatchFace {
     private function formatDate() {
         var info = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         return _days[info.day_of_week - 1] + " " + info.day.format("%d") + "." + info.month.format("%d");
-    }
-
-    private function getSteps() {
-        var info = ActivityMonitor.getInfo();
-        if (info != null && info.steps != null) {
-            return info.steps.toString();
-        }
-        return "--";
-    }
-
-    private function getHeartRate() {
-        var activity = Activity.getActivityInfo();
-        if (activity != null && activity.currentHeartRate != null) {
-            return activity.currentHeartRate.toString();
-        }
-        if (ActivityMonitor has :getHeartRateHistory) {
-            var sample = ActivityMonitor.getHeartRateHistory(1, true).next();
-            if (sample != null && sample.heartRate != ActivityMonitor.INVALID_HR_SAMPLE) {
-                return sample.heartRate.toString();
-            }
-        }
-        return "--";
     }
 }
