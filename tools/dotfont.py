@@ -32,6 +32,16 @@ ICONS = {
             ".....XX.",
             ".....XX.",
         ],
+        8: [
+            ".XX.....",
+            "XXXX....",
+            "XXXX.XX.",
+            ".XX.XXXX",
+            "....XXXX",
+            ".XX.XXX.",
+            ".XX.....",
+            ".....XX.",
+        ],
         7: [
             ".XX.....",
             "XXXX....",
@@ -45,6 +55,16 @@ ICONS = {
     "&": {  # сердце (пульс)
         9: [
             ".......",
+            ".XX.XX.",
+            "XXXXXXX",
+            "XXXXXXX",
+            "XXXXXXX",
+            ".XXXXX.",
+            "..XXX..",
+            "...X...",
+            ".......",
+        ],
+        8: [
             ".XX.XX.",
             "XXXXXXX",
             "XXXXXXX",
@@ -151,7 +171,7 @@ LETTERS = "".join(sorted(set("SunMonTueWedThuFriSat")))
 # Шрифты циферблата (размеры подобраны под экран Fenix 6, 260x260)
 BIG = DotFont("big_dots", w=8, h=21, t=3, cell=3, dot=2, gap=2, chars=DIGITS + ":")
 SEC = DotFont("sec_dots", w=7, h=11, t=3, cell=3, dot=2, gap=2, chars=DIGITS)
-SMALL = DotFont("small_dots", w=5, h=9, t=2, cell=2, dot=1, gap=2,
+SMALL = DotFont("small_dots", w=5, h=8, t=2, cell=3, dot=2, gap=2,
                 chars=DIGITS + ".- " + LETTERS + "@&")
 
 FONTS = [BIG, SEC, SMALL]
