@@ -18,30 +18,52 @@ GLYPHS = {
 }
 
 # Иконки (рисуются в мелком шрифте как отдельные символы).
-# Высота должна совпадать с высотой шрифта, в котором они лежат.
+# Для каждой иконки - варианты под разную высоту шрифта (в квадратиках).
 ICONS = {
-    "@": [  # шаги
-        ".XX.....",
-        "XXXX....",
-        "XXXX.XX.",
-        ".XX.XXXX",
-        "....XXXX",
-        ".XX.XXX.",
-        ".XX.....",
-        ".....XX.",
-        ".....XX.",
-    ],
-    "&": [  # сердце (пульс)
-        ".......",
-        ".XX.XX.",
-        "XXXXXXX",
-        "XXXXXXX",
-        "XXXXXXX",
-        ".XXXXX.",
-        "..XXX..",
-        "...X...",
-        ".......",
-    ],
+    "@": {  # шаги
+        9: [
+            ".XX.....",
+            "XXXX....",
+            "XXXX.XX.",
+            ".XX.XXXX",
+            "....XXXX",
+            ".XX.XXX.",
+            ".XX.....",
+            ".....XX.",
+            ".....XX.",
+        ],
+        7: [
+            ".XX.....",
+            "XXXX....",
+            "XXXX.XX.",
+            ".XX.XXXX",
+            "....XXXX",
+            ".XX..XX.",
+            ".....XX.",
+        ],
+    },
+    "&": {  # сердце (пульс)
+        9: [
+            ".......",
+            ".XX.XX.",
+            "XXXXXXX",
+            "XXXXXXX",
+            "XXXXXXX",
+            ".XXXXX.",
+            "..XXX..",
+            "...X...",
+            ".......",
+        ],
+        7: [
+            ".XX.XX.",
+            "XXXXXXX",
+            "XXXXXXX",
+            "XXXXXXX",
+            ".XXXXX.",
+            "..XXX..",
+            "...X...",
+        ],
+    },
 }
 
 
@@ -86,8 +108,8 @@ class DotFont:
         if ch == " ":
             return self.w // 2, set()
         if ch in ICONS:
-            rows = ICONS[ch]
-            assert len(rows) == h, f"иконка {ch!r} должна быть высотой {h}"
+            assert h in ICONS[ch], f"нет варианта иконки {ch!r} высотой {h}"
+            rows = ICONS[ch][h]
             cells = {(r, c) for r, row in enumerate(rows) for c, x in enumerate(row) if x == "X"}
             return len(rows[0]), cells
         spec, _, mod = GLYPHS[ch].partition("|")
@@ -124,7 +146,7 @@ LETTERS = "".join(sorted(set("SunMonTueWedThuFriSat")))
 # Шрифты циферблата (размеры подобраны под экран Fenix 6, 260x260)
 BIG = DotFont("big_dots", w=8, h=21, t=3, cell=3, dot=2, gap=2, chars=DIGITS + ":")
 SEC = DotFont("sec_dots", w=7, h=11, t=3, cell=3, dot=2, gap=2, chars=DIGITS)
-SMALL = DotFont("small_dots", w=5, h=9, t=2, cell=3, dot=2, gap=2,
+SMALL = DotFont("small_dots", w=4, h=7, t=1, cell=3, dot=2, gap=2,
                 chars=DIGITS + ".- " + LETTERS + "@&")
 
 FONTS = [BIG, SEC, SMALL]
