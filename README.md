@@ -1,6 +1,6 @@
 # Suunto Like — циферблат для Garmin Fenix 6
 
-Циферблат в стиле Suunto Core: точечные сегментные цифры, чёрный фон, белые данные.
+Циферблат в стиле Suunto Core: точечные сегментные цифры, белый фон, чёрные точки на тёмно-серой подложке.
 
 ![preview](docs/preview.png)
 
@@ -21,7 +21,7 @@ source/
   SuuntoLikeApp.mc       точка входа
   SuuntoLikeView.mc      отрисовка циферблата
 resources/
-  fonts/                 точечные шрифты (.fnt + .png), генерируются скриптом
+  fonts/                 точечные шрифты и подложки к ним (.fnt + .png), генерируются скриптом
   drawables/             иконка приложения
   strings/               строки
 tools/

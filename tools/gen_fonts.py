@@ -17,7 +17,8 @@ PAD = 2  # отступ между глифами в атласе
 WHITE = (255, 255, 255, 255)
 
 
-def build_font(font: DotFont):
+def build_font(font: DotFont, fill=False):
+    name = font.name + ("_fill" if fill else "")
     glyphs = []
     for ch in font.chars:
         cols, _ = font.glyph(ch)
@@ -31,34 +32,34 @@ def build_font(font: DotFont):
     lines = []
     x = PAD
     for ch, w in glyphs:
-        font.draw(draw, ch, x, PAD, WHITE)
+        font.draw(draw, ch, x, PAD, WHITE, fill=fill)
         lines.append(
             f"char id={ord(ch)} x={x} y={PAD} width={w} height={font.height_px()} "
             f"xoffset=0 yoffset=0 xadvance={font.advance_px(ch)} page=0 chnl=15"
         )
         x += w + PAD
 
-    png_name = f"{font.name}.png"
+    png_name = f"{name}.png"
     img.save(FONT_DIR / png_name)
 
     h = font.height_px()
     fnt = [
-        f'info face="{font.name}" size={h} bold=0 italic=0 charset="" unicode=1 '
+        f'info face="{name}" size={h} bold=0 italic=0 charset="" unicode=1 '
         f"stretchH=100 smooth=0 aa=1 padding=0,0,0,0 spacing=0,0",
         f"common lineHeight={h} base={h} scaleW={atlas_w} scaleH={atlas_h} pages=1 packed=0",
         f'page id=0 file="{png_name}"',
         f"chars count={len(lines)}",
         *lines,
     ]
-    (FONT_DIR / f"{font.name}.fnt").write_text("\n".join(fnt) + "\n")
+    (FONT_DIR / f"{name}.fnt").write_text("\n".join(fnt) + "\n")
 
 
 def build_fonts_xml():
-    ids = {"big_dots": "BigDots", "sec_dots": "SecDots", "small_dots": "SmallDots"}
-    rows = [
-        f'    <font id="{ids[f.name]}" filename="{f.name}.fnt" antialias="false" />'
-        for f in FONTS
-    ]
+    ids = {"big_dots": "Big", "sec_dots": "Sec", "small_dots": "Small"}
+    rows = []
+    for f in FONTS:
+        rows.append(f'    <font id="{ids[f.name]}Dots" filename="{f.name}.fnt" antialias="false" />')
+        rows.append(f'    <font id="{ids[f.name]}Fill" filename="{f.name}_fill.fnt" antialias="false" />')
     (FONT_DIR / "fonts.xml").write_text("<fonts>\n" + "\n".join(rows) + "\n</fonts>\n")
 
 
@@ -79,6 +80,7 @@ if __name__ == "__main__":
     DRAW_DIR.mkdir(parents=True, exist_ok=True)
     for f in FONTS:
         build_font(f)
+        build_font(f, fill=True)  # подложка под точки
     build_fonts_xml()
     build_launcher_icon()
     print("Шрифты и иконка сгенерированы в", FONT_DIR.relative_to(ROOT), "и", DRAW_DIR.relative_to(ROOT))

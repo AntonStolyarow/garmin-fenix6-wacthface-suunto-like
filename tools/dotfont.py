@@ -155,13 +155,21 @@ class DotFont:
         """Ширина строки без хвостового промежутка (как inkWidth в коде циферблата)."""
         return sum(self.advance_px(ch) for ch in text) - self.gap * self.cell
 
-    def draw(self, draw, text, x0, y0, color):
+    def draw(self, draw, text, x0, y0, color, fill=False):
+        """fill=False - точки; fill=True - сплошная подложка: точки плюс зазоры
+        между соседними точками внутри сегмента (наружу за точки не выходит)."""
+        dw, dh = self.dot, self.dot_h
         x = x0
         for ch in text:
             _, cells = self.glyph(ch)
             for r, c in cells:
                 px, py = x + c * self.cell, y0 + r * self.cell
-                draw.rectangle([px, py, px + self.dot - 1, py + self.dot_h - 1], fill=color)
+                rx = self.cell if fill and (r, c + 1) in cells else dw
+                ry = self.cell if fill and (r + 1, c) in cells else dh
+                draw.rectangle([px, py, px + rx - 1, py + dh - 1], fill=color)
+                draw.rectangle([px, py, px + dw - 1, py + ry - 1], fill=color)
+                if fill and rx > dw and ry > dh and (r + 1, c + 1) in cells:
+                    draw.rectangle([px, py, px + rx - 1, py + ry - 1], fill=color)
             x += self.advance_px(ch)
 
 

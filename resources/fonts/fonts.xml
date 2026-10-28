@@ -1,5 +1,8 @@
 <fonts>
     <font id="BigDots" filename="big_dots.fnt" antialias="false" />
+    <font id="BigFill" filename="big_dots_fill.fnt" antialias="false" />
     <font id="SecDots" filename="sec_dots.fnt" antialias="false" />
+    <font id="SecFill" filename="sec_dots_fill.fnt" antialias="false" />
     <font id="SmallDots" filename="small_dots.fnt" antialias="false" />
+    <font id="SmallFill" filename="small_dots_fill.fnt" antialias="false" />
 </fonts>

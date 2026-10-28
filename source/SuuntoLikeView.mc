@@ -7,9 +7,10 @@ import Toybox.WatchUi;
 
 class SuuntoLikeView extends WatchUi.WatchFace {
 
-    // Цвета: чёрный фон, всё остальное белым
-    private const BG = Graphics.COLOR_BLACK;
-    private const FG = Graphics.COLOR_WHITE;
+    // Цвета: белый фон, чёрные точки на тёмно-серой подложке (как у LCD)
+    private const BG = Graphics.COLOR_WHITE;
+    private const FG = Graphics.COLOR_BLACK;
+    private const UNDER = Graphics.COLOR_DK_GRAY;
 
     // Промежуток между символами в шрифтах, px.
     // Должен совпадать с gap * cell в tools/dotfont.py
@@ -22,9 +23,13 @@ class SuuntoLikeView extends WatchUi.WatchFace {
 
     private var _days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+    // Точки и сплошная подложка под них для каждого размера
     private var _bigFont;
     private var _secFont;
     private var _smallFont;
+    private var _bigFill;
+    private var _secFill;
+    private var _smallFill;
 
     // Где рисуются секунды (нужно для обновления раз в секунду в режиме сна)
     private var _secX = 0;
@@ -40,6 +45,9 @@ class SuuntoLikeView extends WatchUi.WatchFace {
         _bigFont = WatchUi.loadResource(Rez.Fonts.BigDots);
         _secFont = WatchUi.loadResource(Rez.Fonts.SecDots);
         _smallFont = WatchUi.loadResource(Rez.Fonts.SmallDots);
+        _bigFill = WatchUi.loadResource(Rez.Fonts.BigFill);
+        _secFill = WatchUi.loadResource(Rez.Fonts.SecFill);
+        _smallFill = WatchUi.loadResource(Rez.Fonts.SmallFill);
     }
 
     function onUpdate(dc) {
@@ -68,17 +76,16 @@ class SuuntoLikeView extends WatchUi.WatchFace {
         var dy = (h - blockH) / 2;
         var ty = dy + smallH + DATE_GAP;
 
-        dc.setColor(FG, Graphics.COLOR_TRANSPARENT);
-
         // Дата над временем: "Wed 28.10"
-        drawCentered(dc, w, dy, _smallFont, formatDate());
+        var dateStr = formatDate();
+        drawLayered(dc, (w - inkWidth(dc, dateStr, _smallFont)) / 2, dy, _smallFill, _smallFont, dateStr);
 
-        dc.drawText(tx, ty, _bigFont, timeStr, Graphics.TEXT_JUSTIFY_LEFT);
+        drawLayered(dc, tx, ty, _bigFill, _bigFont, timeStr);
 
         // Секунды выровнены по нижнему краю минут
         _secX = tx + timeW + SEC_GAP;
         _secY = ty + bigH - _secH;
-        dc.drawText(_secX, _secY, _secFont, secStr, Graphics.TEXT_JUSTIFY_LEFT);
+        drawLayered(dc, _secX, _secY, _secFill, _secFont, secStr);
     }
 
     // Вызывается раз в секунду в режиме сна: перерисовываем только секунды
@@ -91,8 +98,7 @@ class SuuntoLikeView extends WatchUi.WatchFace {
         dc.setClip(_secX, _secY, _secW, _secH);
         dc.setColor(BG, BG);
         dc.fillRectangle(_secX, _secY, _secW, _secH);
-        dc.setColor(FG, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_secX, _secY, _secFont, secStr, Graphics.TEXT_JUSTIFY_LEFT);
+        drawLayered(dc, _secX, _secY, _secFill, _secFont, secStr);
         dc.clearClip();
     }
 
@@ -106,9 +112,12 @@ class SuuntoLikeView extends WatchUi.WatchFace {
 
     // ---------- рисование ----------
 
-    private function drawCentered(dc, w, y, font, text) {
-        var x = (w - inkWidth(dc, text, font)) / 2;
-        dc.drawText(x, y, font, text, Graphics.TEXT_JUSTIFY_LEFT);
+    // Текст в два слоя: сначала сплошная подложка, поверх точки
+    private function drawLayered(dc, x, y, fill, dots, text) {
+        dc.setColor(UNDER, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(x, y, fill, text, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(FG, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(x, y, dots, text, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     // Ширина строки без хвостового промежутка после последнего символа
