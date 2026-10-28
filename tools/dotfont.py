@@ -122,8 +122,8 @@ DIGITS = "0123456789"
 LETTERS = "".join(sorted(set("SunMonTueWedThuFriSat")))
 
 # Шрифты циферблата (размеры подобраны под экран Fenix 6, 260x260)
-BIG = DotFont("big_dots", w=7, h=21, t=2, cell=3, dot=2, gap=2, chars=DIGITS + ":")
-SEC = DotFont("sec_dots", w=6, h=11, t=2, cell=3, dot=2, gap=2, chars=DIGITS)
+BIG = DotFont("big_dots", w=8, h=21, t=2, cell=3, dot=2, gap=2, chars=DIGITS + ":")
+SEC = DotFont("sec_dots", w=7, h=11, t=2, cell=3, dot=2, gap=2, chars=DIGITS)
 SMALL = DotFont("small_dots", w=5, h=9, t=2, cell=3, dot=2, gap=2,
                 chars=DIGITS + ".- " + LETTERS + "@&")
 
