@@ -13,7 +13,7 @@ SCREEN = 260
 BG, FG = (255, 255, 255), (0, 0, 0)
 
 # те же константы, что в source/SuuntoLikeView.mc
-SEC_GAP, DATE_GAP, ROW_GAP, METRIC_GAP = 6, 9, 9, 15
+SEC_GAP, DATE_GAP, ROW_GAP, METRIC_GAP = 6, 16, 16, 15
 
 
 def main(time_txt="1451", sec_txt="37", date_txt="Wed 28.10", steps="8432", hr="72"):
