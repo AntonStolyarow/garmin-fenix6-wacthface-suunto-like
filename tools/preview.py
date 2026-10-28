@@ -31,7 +31,7 @@ def draw_ticks(d):
                 (c + 126 * math.cos(a), c + 126 * math.sin(a))], fill=FG, width=3)
 
 
-def main(time_txt="14:51", sec_txt="37", date_txt="Wed 28.10", steps="8432", hr="72"):
+def main(time_txt="1451", sec_txt="37", date_txt="Wed 28.10", steps="8432", hr="72"):
     img = Image.new("RGB", (SCREEN, SCREEN), (60, 60, 60))
     d = ImageDraw.Draw(img)
     d.ellipse([0, 0, SCREEN - 1, SCREEN - 1], fill=BG)

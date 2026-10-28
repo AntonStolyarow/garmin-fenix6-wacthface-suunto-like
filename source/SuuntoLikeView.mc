@@ -60,7 +60,7 @@ class SuuntoLikeView extends WatchUi.WatchFace {
         drawTicks(dc, w, h);
 
         var clock = System.getClockTime();
-        var timeStr = formatHour(clock.hour) + ":" + clock.min.format("%02d");
+        var timeStr = formatHour(clock.hour) + clock.min.format("%02d");
         var secStr = clock.sec.format("%02d");
 
         var bigH = dc.getFontHeight(_bigFont);
