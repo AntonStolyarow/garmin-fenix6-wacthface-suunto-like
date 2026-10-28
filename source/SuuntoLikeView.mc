@@ -20,8 +20,8 @@ class SuuntoLikeView extends WatchUi.WatchFace {
 
     // Отступы раскладки (те же, что в tools/preview.py)
     private const SEC_GAP = 6;   // между минутами и секундами
-    private const DATE_GAP = 16; // между датой и временем
-    private const ROW_GAP = 16;  // между временем и строкой шаги/пульс
+    private const DATE_GAP = 26; // между датой и временем
+    private const ROW_GAP = 26;  // между временем и строкой шаги/пульс
     private const METRIC_GAP = 15; // между шагами и пульсом
 
     // Иконки лежат в мелком шрифте как отдельные символы
