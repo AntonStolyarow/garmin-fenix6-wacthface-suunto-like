@@ -41,4 +41,4 @@ python3 tools/gen_fonts.py   # пересобрать шрифты
 python3 tools/preview.py     # посмотреть превью
 ```
 
-Если меняешь `gap` или `cell`, поправь `GAP_PX` в `source/SuuntoLikeView.mc` (это `gap * cell`).
+Если меняешь `gap` или `cell`, поправь `GAP_PX` / `GAP_SMALL_PX` в `source/SuuntoLikeView.mc` (это `gap * cell`).

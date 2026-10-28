@@ -13,9 +13,10 @@ class SuuntoLikeView extends WatchUi.WatchFace {
     private const BG = Graphics.COLOR_WHITE;
     private const FG = Graphics.COLOR_BLACK;
 
-    // Промежуток между символами в шрифтах: 2 колонки по 3 px.
+    // Промежуток между символами в шрифтах, px.
     // Должен совпадать с gap * cell в tools/dotfont.py
-    private const GAP_PX = 6;
+    private const GAP_PX = 6;        // время и секунды: 2 колонки по 3 px
+    private const GAP_SMALL_PX = 4;  // дата и данные: 2 колонки по 2 px
 
     // Отступы раскладки (те же, что в tools/preview.py)
     private const SEC_GAP = 6;   // между минутами и секундами
@@ -128,7 +129,8 @@ class SuuntoLikeView extends WatchUi.WatchFace {
 
     // Ширина строки без хвостового промежутка после последнего символа
     private function inkWidth(dc, text, font) {
-        return dc.getTextWidthInPixels(text, font) - GAP_PX;
+        var gap = (font == _smallFont) ? GAP_SMALL_PX : GAP_PX;
+        return dc.getTextWidthInPixels(text, font) - gap;
     }
 
     // ---------- данные ----------
