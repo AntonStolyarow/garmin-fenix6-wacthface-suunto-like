@@ -2,7 +2,6 @@ import Toybox.Activity;
 import Toybox.ActivityMonitor;
 import Toybox.Graphics;
 import Toybox.Lang;
-import Toybox.Math;
 import Toybox.System;
 import Toybox.Time;
 import Toybox.Time.Gregorian;
@@ -21,7 +20,8 @@ class SuuntoLikeView extends WatchUi.WatchFace {
     // Отступы раскладки (те же, что в tools/preview.py)
     private const SEC_GAP = 6;   // между минутами и секундами
     private const DATE_GAP = 9;  // между датой и временем
-    private const ROW_GAP = 9;   // между временем, шагами и пульсом
+    private const ROW_GAP = 9;   // между временем и строкой шаги/пульс
+    private const METRIC_GAP = 15; // между шагами и пульсом
 
     // Иконки лежат в мелком шрифте как отдельные символы
     private const ICON_STEPS = "@";
@@ -57,8 +57,6 @@ class SuuntoLikeView extends WatchUi.WatchFace {
         dc.setColor(FG, BG);
         dc.clear();
 
-        drawTicks(dc, w, h);
-
         var clock = System.getClockTime();
         var timeStr = formatHour(clock.hour) + clock.min.format("%02d");
         var secStr = clock.sec.format("%02d");
@@ -87,12 +85,15 @@ class SuuntoLikeView extends WatchUi.WatchFace {
         var dy = ty - DATE_GAP - smallH;
         drawCentered(dc, w, dy, _smallFont, dateStr);
 
-        // Шаги и пульс под временем
-        var y1 = ty + bigH + ROW_GAP;
-        drawCentered(dc, w, y1, _smallFont, ICON_STEPS + getSteps());
-
-        var y2 = y1 + smallH + ROW_GAP;
-        drawCentered(dc, w, y2, _smallFont, ICON_HEART + getHeartRate());
+        // Шаги и пульс в одну строку под временем, центрируются как одна группа
+        var stepsStr = ICON_STEPS + getSteps();
+        var hrStr = ICON_HEART + getHeartRate();
+        var stepsW = inkWidth(dc, stepsStr, _smallFont);
+        var rowW = stepsW + METRIC_GAP + inkWidth(dc, hrStr, _smallFont);
+        var rx = (w - rowW) / 2;
+        var ry = ty + bigH + ROW_GAP;
+        dc.drawText(rx, ry, _smallFont, stepsStr, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(rx + stepsW + METRIC_GAP, ry, _smallFont, hrStr, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     // Вызывается раз в секунду в режиме сна: перерисовываем только секунды
@@ -119,33 +120,6 @@ class SuuntoLikeView extends WatchUi.WatchFace {
     }
 
     // ---------- рисование ----------
-
-    // 12 рисок по краю, наверху две точки (North), как у Suunto Core
-    private function drawTicks(dc, w, h) {
-        var cx = w / 2.0;
-        var cy = h / 2.0;
-        var k = w / 260.0;
-
-        dc.setColor(FG, Graphics.COLOR_TRANSPARENT);
-        dc.setPenWidth(3);
-
-        for (var i = 0; i < 12; i++) {
-            if (i == 0) {
-                var offsets = [-4, 4];
-                for (var j = 0; j < 2; j++) {
-                    var b = Math.toRadians(-90 + offsets[j]);
-                    dc.fillCircle(cx + 121 * k * Math.cos(b), cy + 121 * k * Math.sin(b), 3);
-                }
-                continue;
-            }
-            var a = Math.toRadians(i * 30 - 90);
-            dc.drawLine(
-                cx + 116 * k * Math.cos(a), cy + 116 * k * Math.sin(a),
-                cx + 126 * k * Math.cos(a), cy + 126 * k * Math.sin(a)
-            );
-        }
-        dc.setPenWidth(1);
-    }
 
     private function drawCentered(dc, w, y, font, text) {
         var x = (w - inkWidth(dc, text, font)) / 2;
