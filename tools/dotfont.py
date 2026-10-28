@@ -82,7 +82,8 @@ class DotFont:
     def _segs(self, w):
         h, t = self.h, self.t
         mid = (h - t) // 2
-        up, low, hor = range(0, h // 2 + 1), range(h // 2 - 1, h), range(0, w)
+        # верхние вертикали - от верха до средней перекладины, нижние - от неё до низа
+        up, low, hor = range(0, mid + t), range(mid, h), range(0, w)
         cc = (w - t) // 2
         return {
             "a": {(r, c) for r in range(t) for c in hor},
