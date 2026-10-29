@@ -138,7 +138,8 @@ class DotFont:
             cells = {(r, c) for r, row in enumerate(rows) for c, x in enumerate(row) if x == "X"}
             return len(rows[0]), cells
         spec, _, mod = GLYPHS[ch].partition("|")
-        w = {"w": self.w + 3, "n": self.t}.get(mod, self.w)
+        # широкие M/W: три вертикали плюс два просвета минимум в 1 квадратик
+        w = {"w": max(self.w + 3, 3 * self.t + 2), "n": self.t}.get(mod, self.w)
         seg = self._segs(w)
         cells = set()
         for s in spec:
