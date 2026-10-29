@@ -15,7 +15,7 @@ class SuuntoLikeView extends WatchUi.WatchFace {
     // Промежуток между символами в шрифтах, px.
     // Должен совпадать с gap * cell в tools/dotfont.py
     private const GAP_PX = 6;        // время и секунды: 2 колонки по 3 px
-    private const GAP_SMALL_PX = 3;  // дата: 1 колонка по 3 px
+    private const GAP_SMALL_PX = 6;  // дата: 2 колонки по 3 px
 
     // Отступы раскладки (те же, что в tools/preview.py)
     private const SEC_GAP = 6;   // между минутами и секундами

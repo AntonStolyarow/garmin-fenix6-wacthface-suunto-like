@@ -180,7 +180,7 @@ LETTERS = "".join(sorted(set("SunMonTueWedThuFriSat")))
 # Шрифты циферблата (размеры подобраны под экран Fenix 6, 260x260)
 BIG = DotFont("big_dots", w=10, h=26, t=4, cell=3, dot=2, gap=2, chars=DIGITS + ":")
 SEC = DotFont("sec_dots", w=7, h=12, t=3, cell=3, dot=2, gap=2, chars=DIGITS)
-SMALL = DotFont("small_dots", w=7, h=14, t=3, cell=3, dot=2, gap=1,
+SMALL = DotFont("small_dots", w=6, h=12, t=2, cell=3, dot=2, gap=2,
                 chars=DIGITS + ".- " + LETTERS)  # дата
 
 FONTS = [BIG, SEC, SMALL]
